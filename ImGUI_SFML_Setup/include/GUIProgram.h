@@ -32,9 +32,7 @@ namespace GUIProgram
 		///<returns>The full path including name of the file the user specified</returns>
 		static char* saveExplorer();
 
-
-	// public Setters
-	public:
+		// public Setters
 		void setProgramName(const std::string programName) { m_programName = programName; }
 		///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 		///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
@@ -60,9 +58,13 @@ namespace GUIProgram
 		GUIProgram() = default;
 
 		std::string extractFileNameFromPath(std::string path, char seperator = '/');
+		std::wstring string2wstring(const std::string& s);
 
 	// private variables
 	private:
+		float m_width = 640.0f;
+		float m_height = 480.0f;
+
 		std::string m_programName;
 		std::string m_currentFileName;
 

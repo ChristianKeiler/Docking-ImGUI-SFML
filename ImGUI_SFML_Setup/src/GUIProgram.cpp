@@ -12,9 +12,11 @@ namespace GUIProgram
 
 	void GUIProgram::run()
 	{
-		sf::RenderWindow window(sf::VideoMode(640, 480), m_programName);
+		sf::RenderWindow window(sf::VideoMode(m_width, m_width), m_programName);
 
 		//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
+		HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
+		::SetWindowPos(windowHandle, 0, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -213,6 +215,7 @@ namespace GUIProgram
 			return nullptr;
 		}
 	}
+
 	std::string GUIProgram::extractFileNameFromPath(std::string path, char seperator)
 	{
 		std::size_t seperatorPosition = path.rfind(seperator);
@@ -227,6 +230,7 @@ namespace GUIProgram
 		}
 	}
 
+
 	void GUIProgram::PushFont(std::string fontName)
 	{
 		ImGui::PushFont(m_fontSelector[fontName]);
@@ -235,5 +239,18 @@ namespace GUIProgram
 	void GUIProgram::PopFont()
 	{
 		ImGui::PopFont();
+	}
+
+	// https://stackoverflow.com/a/27296
+	std::wstring GUIProgram::string2wstring(const std::string& s)
+	{
+		int len;
+		int slength = (int)s.length() + 1;
+		len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+		wchar_t* buf = new wchar_t[len];
+		MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+		std::wstring r(buf);
+		delete[] buf;
+		return r;
 	}
 }
