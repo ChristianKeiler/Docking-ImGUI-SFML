@@ -32,10 +32,32 @@ void header()
 	}
 }
 
+void body()
+{
+	bool docked = true;
+	ImGui::Begin("Test", &docked);
+	if (ImGui::Button("Button", ImVec2(50, 20)))
+	{
+		std::cout << "Button pressed" << std::endl;
+	}
+	ImGui::End();
+}
+
 int main()
 {
-	GUIProgram::GUIProgram program = GUIProgram::GUIProgram::init("Test");
-	program.setHeader([]() {header(); });
+	GUIProgram::GUIProgram program = GUIProgram::GUIProgram::get();
+	program.setProgramName("Test");
+
+	//program.addCustomFont("fonts/arial.ttf", 16.0f);
+	//program.addCustomFont("fonts/alfredo.ttf", 10.0f);
+
+	// I suggest setting header and body using either of 2 styles
+	// compact using a single lambda expression
+	program.setHeader([]() { header(); });
+	
+	std::function<void()> customBody = []() { body(); };
+	program.setBody(customBody);
+	
 	program.run();
 	return 0;
 }

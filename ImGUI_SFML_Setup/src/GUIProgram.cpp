@@ -10,20 +10,11 @@ namespace GUIProgram
 		return program;
 	}
 
-	GUIProgram& GUIProgram::GUIProgram::init(std::string programName)
-	{
-		static GUIProgram program;
-
-		program.m_programName = programName;
-
-		return program;
-	}
-
 	void GUIProgram::run()
 	{
 		sf::RenderWindow window(sf::VideoMode(640, 480), m_programName);
 
-		ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
+		//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
 
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -47,7 +38,9 @@ namespace GUIProgram
 			io.Fonts->Clear();
 			for (auto f : m_fontList)
 			{
-				io.Fonts->AddFontFromFileTTF(f.c_str(), m_fontSize);
+				ImFont* atlas = io.Fonts->AddFontFromFileTTF(f.first.c_str(), f.second);
+				m_fontSelector.insert(std::make_pair(extractFileNameFromPath(f.first), atlas));
+				assert(atlas != NULL);
 			}
 		}
 
@@ -219,5 +212,28 @@ namespace GUIProgram
 		else {
 			return nullptr;
 		}
+	}
+	std::string GUIProgram::extractFileNameFromPath(std::string path, char seperator)
+	{
+		std::size_t seperatorPosition = path.rfind(seperator);
+		std::size_t filetypeDotPosition = path.rfind('.');
+		if (seperatorPosition != std::string::npos)
+		{
+			return path.substr(seperatorPosition + 1, filetypeDotPosition - seperatorPosition - 1);
+		}
+		else
+		{
+			return path;
+		}
+	}
+
+	void GUIProgram::PushFont(std::string fontName)
+	{
+		ImGui::PushFont(m_fontSelector[fontName]);
+	}
+
+	void GUIProgram::PopFont()
+	{
+		ImGui::PopFont();
 	}
 }
