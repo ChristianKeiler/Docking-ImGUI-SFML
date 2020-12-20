@@ -11,6 +11,8 @@
 #include "imgui-SFML.h"
 #include "imgui_stdlib.h"
 
+using namespace KeilerDev;
+
 void header()
 {
 	if (ImGui::BeginMenuBar())
