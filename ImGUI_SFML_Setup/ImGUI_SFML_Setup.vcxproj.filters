@@ -45,6 +45,9 @@
     <ClCompile Include="src\ImGUI_SFML_Setup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="include\GUIProgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

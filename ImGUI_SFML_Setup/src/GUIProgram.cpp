@@ -3,20 +3,21 @@
 
 namespace GUIProgram
 {
-	GUIProgram& GUIProgram::GUIProgram::get()
+	GUIProgram* GUIProgram::GUIProgram::Get()
 	{
 		static GUIProgram program;
 
-		return program;
+		return &program;
 	}
 
 	void GUIProgram::run()
 	{
 		sf::RenderWindow window(sf::VideoMode(m_width, m_width), m_programName);
 
-		//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
-		HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
-		::SetWindowPos(windowHandle, 0, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+		ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
+		// If you'd rather start the program as a resolution sized window instead of expanding to fullscreen use these 2 lines instead of ShowWindow()
+		//HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
+		//::SetWindowPos(windowHandle, 0, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -52,6 +53,12 @@ namespace GUIProgram
 
 		while (window.isOpen())
 		{
+			if (m_exitCalled)
+			{
+				window.close();
+				break;
+			}
+
 			sf::Event event;
 			while (window.pollEvent(event))
 			{
@@ -133,89 +140,6 @@ namespace GUIProgram
 		ImGui::SFML::Shutdown();
 	}
 
-
-	char* GUIProgram::openExplorer()
-	{
-		// ------------------------------------------------
-		// file explorer code taken from https://stackoverflow.com/a/43105644
-		wchar_t filename[MAX_PATH];
-
-		OPENFILENAMEW ofn;
-		ZeroMemory(&filename, sizeof(filename));
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
-		ofn.hwndOwner = NULL;
-		ofn.lpstrFilter = _T("All Files\0*.*\0\0");
-		ofn.lpstrFile = filename;
-		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = _T("Select a file");
-		ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
-
-		// ------------------------------------------------
-
-		if (GetOpenFileName(&ofn))
-		{
-			char* fn = nullptr;
-
-			std::wcout << "Loading: " << filename << std::endl;
-
-			size_t origsize = wcslen(filename);
-			size_t convertedChars = 0;
-
-			char strConcat[] = "(char *)";
-			size_t strConcatsize = (strlen(strConcat) + 1) * 2;
-			const size_t newsize = origsize * 2;
-			fn = new char[newsize + strConcatsize];
-			wcstombs_s(&convertedChars, fn, newsize, filename, _TRUNCATE);
-
-			return fn;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	char* GUIProgram::saveExplorer()
-	{
-		// ------------------------------------------------
-		// file explorer code taken from https://stackoverflow.com/a/43105644
-		wchar_t filename[MAX_PATH];
-
-		OPENFILENAMEW ofn;
-		ZeroMemory(&filename, sizeof(filename));
-		ZeroMemory(&ofn, sizeof(ofn));
-		ofn.lStructSize = sizeof(ofn);
-		ofn.hwndOwner = NULL;
-		ofn.lpstrFilter = _T("All Files\0*.*\0\0");
-		ofn.lpstrFile = filename;
-		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = _T("Select a save location");
-		ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
-
-		// ------------------------------------------------
-
-		if (GetSaveFileName(&ofn)) {
-			char* fn = nullptr;
-
-			std::wcout << "Saving: " << filename << std::endl;
-
-			size_t origsize = wcslen(filename);
-			size_t convertedChars = 0;
-
-			char strConcat[] = "(char *)";
-			size_t strConcatsize = (strlen(strConcat) + 1) * 2;
-			const size_t newsize = origsize * 2;
-			fn = new char[newsize + strConcatsize];
-			wcstombs_s(&convertedChars, fn, newsize, filename, _TRUNCATE);
-
-			return fn;
-		}
-		else {
-			return nullptr;
-		}
-	}
-
 	std::string GUIProgram::extractFileNameFromPath(std::string path, char seperator)
 	{
 		std::size_t seperatorPosition = path.rfind(seperator);
@@ -231,12 +155,17 @@ namespace GUIProgram
 	}
 
 
-	void GUIProgram::PushFont(std::string fontName)
+	void GUIProgram::pushFont(std::string fontName)
 	{
+		if (m_fontSelector.find(fontName) == m_fontSelector.end())
+		{
+			std::cout << "[Font Error] The specified font could not be found! The fontName variable has to be equivalent to the path you specified when registering the font!" << std::endl;
+			return;
+		}
 		ImGui::PushFont(m_fontSelector[fontName]);
 	}
 
-	void GUIProgram::PopFont()
+	void GUIProgram::popFont()
 	{
 		ImGui::PopFont();
 	}
