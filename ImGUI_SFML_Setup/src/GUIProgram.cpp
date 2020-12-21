@@ -16,6 +16,8 @@ namespace KeilerDev
 		{
 			sf::RenderWindow window(sf::VideoMode(m_width, m_width), m_programName);
 
+			setIcon(window);
+
 			ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
 			// If you'd rather start the program as a resolution sized window instead of expanding to fullscreen use these 2 lines instead of ShowWindow()
 			//HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
@@ -161,7 +163,18 @@ namespace KeilerDev
 		{
 			if (m_fontSelector.find(fontName) == m_fontSelector.end())
 			{
-				std::cout << "[Font Error] The specified font could not be found! The fontName variable has to be equivalent to the path you specified when registering the font!" << std::endl;
+				bool substringExists = false;
+				for (auto font : m_fontSelector)
+				{
+					if (fontName.find(font.first) != std::string::npos)
+					{
+						writeFontWarning(fontName, font.first);
+						ImGui::PushFont(font.second);
+						return;
+					}
+				}
+
+				std::cout << "[Font Error] " << fontName << "does not exist in the font atlas."<< std::endl;
 				return;
 			}
 			ImGui::PushFont(m_fontSelector[fontName]);
@@ -183,6 +196,34 @@ namespace KeilerDev
 			std::wstring r(buf);
 			delete[] buf;
 			return r;
+		}
+
+		void GUIProgram::writeFontWarning(std::string fontPath, std::string fontName)
+		{
+			if (m_fontWarnings.empty())
+			{
+				for (auto name : m_fontSelector)
+				{
+					m_fontWarnings.insert(std::make_pair(name.first, false));
+				}
+			}
+			
+			if (!m_fontWarnings[fontName])
+			{
+				m_fontWarnings[fontName] = true;
+				std::cout << "[Font Warning] \'" << fontPath << "\' found as \'" << fontName << "\'! Use \'" << fontName << "\' instead" << std::endl;
+			}
+		}
+
+		void GUIProgram::setIcon(sf::RenderWindow& window)
+		{
+			if (m_iconPath.empty()) return;
+
+			sf::Image icon;
+			icon.loadFromFile(m_iconPath);
+			sf::Vector2u iconSize = icon.getSize();
+			window.setIcon(iconSize.x, iconSize.y, icon.getPixelsPtr());
+
 		}
 	}
 }

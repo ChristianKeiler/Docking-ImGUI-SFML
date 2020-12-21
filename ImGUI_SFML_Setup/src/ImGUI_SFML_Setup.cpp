@@ -38,8 +38,7 @@ void header()
 
 void body()
 {
-	bool docked = true;
-	ImGui::Begin("Test", &docked);
+	ImGui::Begin("Test");
 	if (ImGui::Button("Button", ImVec2(50, 20)))
 	{
 		std::cout << "Button pressed" << std::endl;
@@ -51,19 +50,21 @@ int main()
 {
 	// GUIProgram is based on a Singleton implementation
 	// There are 2 ways to use the class
-	// Either get the classes instance through GUIProgram::get()
+	// Either get the classes instance through GUIProgram::Get() (which returns a pointer)
 	// or use the static methods instead
 	// nonstatic and static methods share method names.
 	// nonstatic methods start with a lowercase letter, static methods start with an uppercase letter
 	// Example:
 	//	nonstatic:
-	//		GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::get();
+	//		GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	//		program->setProgramName("Example");
 	//	static:
 	//		GUIProgram::GUIProgram::SetProgramName("Example");
 
 	GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	program->setProgramName("Test");
+
+	program->setProgramIcon("fonts/icon.png");
 
 	// I suggest setting header and body using either of 2 styles
 	// compact using a single lambda expression

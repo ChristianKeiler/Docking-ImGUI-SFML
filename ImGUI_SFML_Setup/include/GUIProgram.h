@@ -20,7 +20,6 @@ namespace KeilerDev
 	{
 		class GUIProgram
 		{
-			// public methods
 		public:
 			static GUIProgram* Get();
 
@@ -31,17 +30,23 @@ namespace KeilerDev
 			static void Run() { GUIProgram::Get()->run(); }
 
 			///<summary>Ends the GUIProgram</summary>
-			void quit() { exit(); }
+			void quit() { m_exitCalled = true; }
 			///<summary>Ends the GUIProgram</summary>
-			static void Quit() { GUIProgram::Get()->exit(); }
+			static void Quit() { GUIProgram::Get()->m_exitCalled = true; }
 
-			// public Setters
 			///<summary>Sets the name of the generated window</summary>
 			///<param name='programName'>The name that should be displayed on the top of the Window</param>
 			void setProgramName(const std::string programName) { m_programName = programName; }
 			///<summary>Sets the name of the generated window</summary>
 			///<param name='programName'>The name that should be displayed on the top of the Window</param>
 			static void SetProgramName(const std::string programName) { GUIProgram::Get()->m_programName = programName; }
+
+			///<summary>Sets the path from where to load the programs icon from. No icon is used if this (or the static version of this) function is never called.</summary>
+			///<param name='iconPath'>The path from where to load the icon</param>
+			void setProgramIcon(const std::string iconPath) { m_iconPath = iconPath; }
+			///<summary>Sets the path from where to load the programs icon from. No icon is used if this (or the non-static version of this) function is never called.</summary>
+			///<param name='iconPath'>The path from where to load the icon</param>
+			static void SetProgramIcon(const std::string iconPath) { GUIProgram::Get()->m_iconPath = iconPath; }
 
 			///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 			///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
@@ -58,16 +63,12 @@ namespace KeilerDev
 			static void SetBody(const std::function<void()> bodyFunction) { GUIProgram::Get()->m_body = bodyFunction; }
 
 			///<summary>Adds a custom font to the GUIProgram. The first font will be used as default font for the program.
-			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.
-			///Notice: Functionality of multi-font usage is currently untested. It should work, if it doesn't (and if you absolutely need it right away, 
-			///please implement it yourself) let me know so I can fix it for future releases</summary>
+			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.</summary>
 			///<param name='fontPath'>The path your font is located at</param>
 			///<param name='fontSize'>The size your font should be (in pixels)</param>
 			void addCustomFont(const std::string fontPath, const float fontSize) { m_fontList.insert(std::make_pair(fontPath, fontSize)); }
 			///<summary>Adds a custom font to the GUIProgram. The first font will be used as default font for the program.
-			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.
-			///Notice: Functionality of multi-font usage is currently untested. It should work, if it doesn't (and if you absolutely need it right away, 
-			///please implement it yourself) let me know so I can fix it for future releases</summary>
+			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.</summary>
 			///<param name='fontPath'>The path your font is located at</param>
 			///<param name='fontSize'>The size your font should be (in pixels)</param>
 			static void AddCustomFont(const std::string fontPath, const float fontSize) { GUIProgram::Get()->m_fontList.insert(std::make_pair(fontPath, fontSize)); }
@@ -87,9 +88,11 @@ namespace KeilerDev
 			// private methods
 		private:
 			GUIProgram() = default;
-			void exit() { m_exitCalled = true; }
 
-			std::string extractFileNameFromPath(std::string path, char seperator = '/');
+			void writeFontWarning(std::string fontPath, std::string fontName);
+			void setIcon(sf::RenderWindow& window);
+
+			std::string extractFileNameFromPath(const std::string path, const char seperator = '/');
 			std::wstring string2wstring(const std::string& s);
 
 			// private variables
@@ -100,7 +103,10 @@ namespace KeilerDev
 			std::string m_programName;
 			std::string m_currentFileName;
 
+			std::string m_iconPath;
+
 			std::map<std::string, float> m_fontList = std::map<std::string, float>();
+			std::map<std::string, bool> m_fontWarnings = std::map<std::string, bool>();
 			std::map<std::string, ImFont*> m_fontSelector = std::map<std::string, ImFont*>();
 
 			std::function<void()> m_header = []() {};
