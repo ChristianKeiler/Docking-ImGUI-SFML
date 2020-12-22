@@ -13,6 +13,7 @@
 #include <iostream>
 #include <functional>
 #include <tchar.h>
+#include "Utility.h"
 
 namespace KeilerDev
 {
@@ -48,19 +49,28 @@ namespace KeilerDev
 			///<param name='iconPath'>The path from where to load the icon</param>
 			static void SetProgramIcon(const std::string iconPath) { GUIProgram::Get()->m_iconPath = iconPath; }
 
+			///<summary>Sets which kind of window you want to use (Fullscreen, windowed, etc). Use the sf::Style flags to construct the window style.
+			/// Default is windowed with a titlebar, a resize and a close button</summary>
+			///<param name='windowStyle'>The integer resembling the desired style</param>
+			void setProgramWindowStyle(const int windowStyle) { m_windowStyle = windowStyle; }
+			///<summary>Sets which kind of window you want to use (Fullscreen, windowed, etc). Use the sf::Style flags to construct the window style.
+			/// Default is windowed with a titlebar, a resize and a close button</summary>
+			///<param name='windowStyle'>The integer resembling the desired style</param>
+			static void SetProgramWindowStyle(const int windowStyle) { GUIProgram::Get()->m_windowStyle = windowStyle; }
+
 			///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 			///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
-			void setHeader(const std::function<void()> headerFunction) { m_header = headerFunction; }
+			void setHeader(const std::function<void()>& headerFunction) { m_header = headerFunction; }
 			///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 			///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
-			static void SetHeader(const std::function<void()> headerFunction) { GUIProgram::Get()->m_header = headerFunction; }
+			static void SetHeader(const std::function<void()>& headerFunction) { GUIProgram::Get()->m_header = headerFunction; }
 
 			///<summary>Sets the method the GUIProgram should use to build the entire content</summary>
 			///<param name='bodyFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own body/content</param>
-			void setBody(const std::function<void()> bodyFunction) { m_body = bodyFunction; }
+			void setBody(const std::function<void()>& bodyFunction) { m_body = bodyFunction; }
 			///<summary>Sets the method the GUIProgram should use to build the entire content</summary>
 			///<param name='bodyFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own body/content</param>
-			static void SetBody(const std::function<void()> bodyFunction) { GUIProgram::Get()->m_body = bodyFunction; }
+			static void SetBody(const std::function<void()>& bodyFunction) { GUIProgram::Get()->m_body = bodyFunction; }
 
 			///<summary>Adds a custom font to the GUIProgram. The first font will be used as default font for the program.
 			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.</summary>
@@ -97,6 +107,8 @@ namespace KeilerDev
 
 			// private variables
 		private:
+			int m_windowStyle = sf::Style::Default;
+
 			int m_width = 640;
 			int m_height = 480;
 

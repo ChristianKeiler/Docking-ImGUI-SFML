@@ -64,7 +64,11 @@ int main()
 	GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	program->setProgramName("Test");
 
-	program->setProgramIcon("fonts/icon.png");
+	//program->setProgramIcon("fonts/icon.png");
+	GUIProgram::GUIProgram::SetProgramIcon("fonts/icon.png");
+
+	program->setProgramWindowStyle(sf::Style::Titlebar);
+	//GUIProgram::GUIProgram::SetProgramWindowStyle(sf::Style::Titlebar | sf::Style::Close);
 
 	// I suggest setting header and body using either of 2 styles
 	// compact using a single lambda expression

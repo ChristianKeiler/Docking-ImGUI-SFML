@@ -14,11 +14,12 @@ namespace KeilerDev
 
 		void GUIProgram::run()
 		{
-			sf::RenderWindow window(sf::VideoMode(m_width, m_width), m_programName);
+			sf::RenderWindow window(sf::VideoMode(m_width, m_height), m_programName, m_windowStyle);
 
 			setIcon(window);
 
-			ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
+			// note that this is windows specific!
+			//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
 			// If you'd rather start the program as a resolution sized window instead of expanding to fullscreen use these 2 lines instead of ShowWindow()
 			//HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
 			//::SetWindowPos(windowHandle, 0, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
