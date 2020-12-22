@@ -95,18 +95,26 @@ namespace KeilerDev
 			///<summary>Ends the current font change</summary>
 			static void PopFont() { GUIProgram::Get()->popFont(); }
 
+			///<summary>Changes the style of an active window at runtime</summary>
+			//<param name='windowStyle'>The integer resembling the desired style</param>
+			void changeProgramWindowStyle(const int windowStyle);
+			///<summary>Changes the style of an active window at runtime</summary>
+			//<param name='windowStyle'>The integer resembling the desired style</param>
+			static void ChangeProgramWindowStyle(const int windowStyle) { GUIProgram::Get()->changeProgramWindowStyle(windowStyle); }
+
 			// private methods
 		private:
 			GUIProgram() = default;
 
 			void writeFontWarning(std::string fontPath, std::string fontName);
-			void setIcon(sf::RenderWindow& window);
+			void setIcon();
+			void adjustResolutionOnFullscreen();
 
 			std::string extractFileNameFromPath(const std::string path, const char seperator = '/');
-			std::wstring string2wstring(const std::string& s);
 
 			// private variables
 		private:
+			sf::RenderWindow m_window;
 			int m_windowStyle = sf::Style::Default;
 
 			int m_width = 640;
@@ -124,6 +132,7 @@ namespace KeilerDev
 			std::function<void()> m_header = []() {};
 			std::function<void()> m_body = []() {};
 
+			bool m_programStarted = false;
 			bool m_exitCalled = false;
 		};
 	}

@@ -30,6 +30,8 @@ void header()
 		}
 		if (ImGui::BeginMenu("Options"))
 		{
+			if (ImGui::MenuItem("Fullscreen")) GUIProgram::GUIProgram::ChangeProgramWindowStyle(sf::Style::Fullscreen);
+			if (ImGui::MenuItem("Default")) GUIProgram::GUIProgram::ChangeProgramWindowStyle(sf::Style::Default);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

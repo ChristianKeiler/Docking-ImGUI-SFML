@@ -14,9 +14,11 @@ namespace KeilerDev
 
 		void GUIProgram::run()
 		{
-			sf::RenderWindow window(sf::VideoMode(m_width, m_height), m_programName, m_windowStyle);
+			m_programStarted = true;
 
-			setIcon(window);
+			m_window.create(sf::VideoMode(m_width, m_height), m_programName, m_windowStyle);
+
+			setIcon();
 
 			// note that this is windows specific!
 			//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
@@ -39,7 +41,7 @@ namespace KeilerDev
 
 			bool dock = true;
 
-			ImGui::SFML::Init(window, m_fontList.empty());
+			ImGui::SFML::Init(m_window, m_fontList.empty());
 
 			if (!m_fontList.empty())
 			{
@@ -56,26 +58,26 @@ namespace KeilerDev
 
 			sf::Clock deltaClock;
 
-			while (window.isOpen())
+			while (m_window.isOpen())
 			{
 				if (m_exitCalled)
 				{
-					window.close();
+					m_window.close();
 					break;
 				}
 
 				sf::Event event;
-				while (window.pollEvent(event))
+				while (m_window.pollEvent(event))
 				{
 					ImGui::SFML::ProcessEvent(event);
 
 					if (event.type == sf::Event::Closed)
 					{
-						window.close();
+						m_window.close();
 					}
 				}
 
-				ImGui::SFML::Update(window, deltaClock.restart());
+				ImGui::SFML::Update(m_window, deltaClock.restart());
 
 				// additional imgui configuration
 				ImGuiWindowFlags windowFlags = 0;
@@ -132,14 +134,14 @@ namespace KeilerDev
 
 				m_body();
 
-				window.clear();
-				ImGui::SFML::Render(window);
+				m_window.clear();
+				ImGui::SFML::Render(m_window);
 				if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 				{
 					ImGui::UpdatePlatformWindows();
 					ImGui::RenderPlatformWindowsDefault();
 				}
-				window.display();
+				m_window.display();
 			}
 
 			ImGui::SFML::Shutdown();
@@ -186,17 +188,18 @@ namespace KeilerDev
 			ImGui::PopFont();
 		}
 
-		// https://stackoverflow.com/a/27296
-		std::wstring GUIProgram::string2wstring(const std::string& s)
+		void GUIProgram::changeProgramWindowStyle(int windowStyle)
 		{
-			int len;
-			int slength = (int)s.length() + 1;
-			len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
-			wchar_t* buf = new wchar_t[len];
-			MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-			std::wstring r(buf);
-			delete[] buf;
-			return r;
+			if (m_programStarted)
+			{
+				if (windowStyle & sf::Style::Fullscreen)
+				{
+					adjustResolutionOnFullscreen();
+				}
+				m_window.create(sf::VideoMode(m_width, m_height), m_programName, windowStyle);
+				setIcon();
+				m_windowStyle = windowStyle;
+			}
 		}
 
 		void GUIProgram::writeFontWarning(std::string fontPath, std::string fontName)
@@ -216,15 +219,21 @@ namespace KeilerDev
 			}
 		}
 
-		void GUIProgram::setIcon(sf::RenderWindow& window)
+		void GUIProgram::setIcon()
 		{
 			if (m_iconPath.empty()) return;
 
 			sf::Image icon;
 			icon.loadFromFile(m_iconPath);
 			sf::Vector2u iconSize = icon.getSize();
-			window.setIcon(iconSize.x, iconSize.y, icon.getPixelsPtr());
+			m_window.setIcon(iconSize.x, iconSize.y, icon.getPixelsPtr());
 
+		}
+
+		void GUIProgram::adjustResolutionOnFullscreen()
+		{
+			m_width = sf::VideoMode::getDesktopMode().width;
+			m_height = sf::VideoMode::getDesktopMode().height;
 		}
 	}
 }
