@@ -13,7 +13,6 @@
 #include <iostream>
 #include <functional>
 #include <tchar.h>
-#include "Utility.h"
 
 namespace KeilerDev
 {
@@ -26,28 +25,27 @@ namespace KeilerDev
 
 			///<summary>Starts the GUIProgram</summary>
 			void run();
-
 			///<summary>Starts the GUIProgram</summary>
 			static void Run() { GUIProgram::Get()->run(); }
 
 			///<summary>Ends the GUIProgram</summary>
 			void quit() { m_exitCalled = true; }
 			///<summary>Ends the GUIProgram</summary>
-			static void Quit() { GUIProgram::Get()->m_exitCalled = true; }
+			static void Quit() { GUIProgram::Get()->quit(); }
 
 			///<summary>Sets the name of the generated window</summary>
 			///<param name='programName'>The name that should be displayed on the top of the Window</param>
 			void setProgramName(const std::string programName) { m_programName = programName; }
 			///<summary>Sets the name of the generated window</summary>
 			///<param name='programName'>The name that should be displayed on the top of the Window</param>
-			static void SetProgramName(const std::string programName) { GUIProgram::Get()->m_programName = programName; }
+			static void SetProgramName(const std::string programName) { GUIProgram::Get()->setProgramName(programName); }
 
 			///<summary>Sets the path from where to load the programs icon from. No icon is used if this (or the static version of this) function is never called.</summary>
 			///<param name='iconPath'>The path from where to load the icon</param>
 			void setProgramIcon(const std::string iconPath) { m_iconPath = iconPath; }
 			///<summary>Sets the path from where to load the programs icon from. No icon is used if this (or the non-static version of this) function is never called.</summary>
 			///<param name='iconPath'>The path from where to load the icon</param>
-			static void SetProgramIcon(const std::string iconPath) { GUIProgram::Get()->m_iconPath = iconPath; }
+			static void SetProgramIcon(const std::string iconPath) { GUIProgram::Get()->setProgramIcon(iconPath); }
 
 			///<summary>Sets which kind of window you want to use (Fullscreen, windowed, etc). Use the sf::Style flags to construct the window style.
 			/// Default is windowed with a titlebar, a resize and a close button</summary>
@@ -56,21 +54,21 @@ namespace KeilerDev
 			///<summary>Sets which kind of window you want to use (Fullscreen, windowed, etc). Use the sf::Style flags to construct the window style.
 			/// Default is windowed with a titlebar, a resize and a close button</summary>
 			///<param name='windowStyle'>The integer resembling the desired style</param>
-			static void SetProgramWindowStyle(const int windowStyle) { GUIProgram::Get()->m_windowStyle = windowStyle; }
+			static void SetProgramWindowStyle(const int windowStyle) { GUIProgram::Get()->setProgramWindowStyle(windowStyle); }
 
 			///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 			///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
 			void setHeader(const std::function<void()>& headerFunction) { m_header = headerFunction; }
 			///<summary>Sets the method the GUIProgram should use to build the headerbar</summary>
 			///<param name='headerFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own header</param>
-			static void SetHeader(const std::function<void()>& headerFunction) { GUIProgram::Get()->m_header = headerFunction; }
+			static void SetHeader(const std::function<void()>& headerFunction) { GUIProgram::Get()->setHeader(headerFunction); }
 
 			///<summary>Sets the method the GUIProgram should use to build the entire content</summary>
 			///<param name='bodyFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own body/content</param>
 			void setBody(const std::function<void()>& bodyFunction) { m_body = bodyFunction; }
 			///<summary>Sets the method the GUIProgram should use to build the entire content</summary>
 			///<param name='bodyFunction'>Use lambdas or wrap your header method into an std::function&lt;void()&gt; to define your own body/content</param>
-			static void SetBody(const std::function<void()>& bodyFunction) { GUIProgram::Get()->m_body = bodyFunction; }
+			static void SetBody(const std::function<void()>& bodyFunction) { GUIProgram::Get()->setBody(bodyFunction); }
 
 			///<summary>Adds a custom font to the GUIProgram. The first font will be used as default font for the program.
 			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.</summary>
@@ -81,7 +79,7 @@ namespace KeilerDev
 			///To change fonts (e.g. if you want a different font for headerbars and content elements) use the PushFont method.</summary>
 			///<param name='fontPath'>The path your font is located at</param>
 			///<param name='fontSize'>The size your font should be (in pixels)</param>
-			static void AddCustomFont(const std::string fontPath, const float fontSize) { GUIProgram::Get()->m_fontList.insert(std::make_pair(fontPath, fontSize)); }
+			static void AddCustomFont(const std::string fontPath, const float fontSize) { GUIProgram::Get()->addCustomFont(fontPath, fontSize); }
 
 			///<summary>Changes the font for any ImGUI code executed after calling this method. Make sure to use PopFont() if you previously called this method</summary>
 			///<param name='fontName'>The name of the font you want to use (excluding the file ending. E.g. If you added "arial.ttf" the fontName would be "arial"</param>
@@ -96,17 +94,17 @@ namespace KeilerDev
 			static void PopFont() { GUIProgram::Get()->popFont(); }
 
 			///<summary>Changes the style of an active window at runtime</summary>
-			//<param name='windowStyle'>The integer resembling the desired style</param>
+			///<param name='windowStyle'>The integer resembling the desired style</param>
 			void changeProgramWindowStyle(const int windowStyle);
 			///<summary>Changes the style of an active window at runtime</summary>
-			//<param name='windowStyle'>The integer resembling the desired style</param>
+			///<param name='windowStyle'>The integer resembling the desired style</param>
 			static void ChangeProgramWindowStyle(const int windowStyle) { GUIProgram::Get()->changeProgramWindowStyle(windowStyle); }
 
 			// private methods
 		private:
 			GUIProgram() = default;
 
-			void writeFontWarning(std::string fontPath, std::string fontName);
+			void writeFontWarning(const std::string fontPath, const std::string fontName);
 			void setIcon();
 			void adjustResolutionOnFullscreen();
 

@@ -40,37 +40,24 @@ void header()
 
 void body()
 {
+	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, sf::Color::Black);
 	ImGui::Begin("Test");
 	if (ImGui::Button("Button", ImVec2(50, 20)))
 	{
 		std::cout << "Button pressed" << std::endl;
 	}
 	ImGui::End();
+	ImGui::PopStyleColor();
 }
 
 int main()
 {
-	// GUIProgram is based on a Singleton implementation
-	// There are 2 ways to use the class
-	// Either get the classes instance through GUIProgram::Get() (which returns a pointer)
-	// or use the static methods instead
-	// nonstatic and static methods share method names.
-	// nonstatic methods start with a lowercase letter, static methods start with an uppercase letter
-	// Example:
-	//	nonstatic:
-	//		GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
-	//		program->setProgramName("Example");
-	//	static:
-	//		GUIProgram::GUIProgram::SetProgramName("Example");
-
 	GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	program->setProgramName("Test");
 
-	//program->setProgramIcon("fonts/icon.png");
-	GUIProgram::GUIProgram::SetProgramIcon("fonts/icon.png");
+	program->setProgramIcon("fonts/icon.png");
 
-	program->setProgramWindowStyle(sf::Style::Titlebar);
-	//GUIProgram::GUIProgram::SetProgramWindowStyle(sf::Style::Titlebar | sf::Style::Close);
+	program->setProgramWindowStyle(sf::Style::Titlebar | sf::Style::Close);
 
 	// I suggest setting header and body using either of 2 styles
 	// compact using a single lambda expression
@@ -80,7 +67,6 @@ int main()
 	std::function<void()> customBody = []() { body(); };
 	program->setBody(customBody);
 	
-	//program->run();
-	GUIProgram::GUIProgram::Run();
+	program->run();
 	return 0;
 }

@@ -20,12 +20,6 @@ namespace KeilerDev
 
 			setIcon();
 
-			// note that this is windows specific!
-			//ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
-			// If you'd rather start the program as a resolution sized window instead of expanding to fullscreen use these 2 lines instead of ShowWindow()
-			//HWND windowHandle = ::FindWindow(NULL, string2wstring(m_programName).c_str());
-			//::SetWindowPos(windowHandle, 0, 0, 0, m_width, m_height, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-
 			ImGui::CreateContext();
 			ImGuiIO& io = ImGui::GetIO(); (void)io;
 			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -49,8 +43,8 @@ namespace KeilerDev
 				for (auto f : m_fontList)
 				{
 					ImFont* atlas = io.Fonts->AddFontFromFileTTF(f.first.c_str(), f.second);
-					m_fontSelector.insert(std::make_pair(extractFileNameFromPath(f.first), atlas));
 					assert(atlas != NULL);
+					m_fontSelector.insert(std::make_pair(extractFileNameFromPath(f.first), atlas));
 				}
 			}
 
@@ -147,7 +141,7 @@ namespace KeilerDev
 			ImGui::SFML::Shutdown();
 		}
 
-		std::string GUIProgram::extractFileNameFromPath(std::string path, char seperator)
+		std::string GUIProgram::extractFileNameFromPath(const std::string path, const char seperator)
 		{
 			std::size_t seperatorPosition = path.rfind(seperator);
 			std::size_t filetypeDotPosition = path.rfind('.');
@@ -162,7 +156,7 @@ namespace KeilerDev
 		}
 
 
-		void GUIProgram::pushFont(std::string fontName)
+		void GUIProgram::pushFont(const std::string fontName)
 		{
 			if (m_fontSelector.find(fontName) == m_fontSelector.end())
 			{
@@ -182,13 +176,12 @@ namespace KeilerDev
 			}
 			ImGui::PushFont(m_fontSelector[fontName]);
 		}
-
 		void GUIProgram::popFont()
 		{
 			ImGui::PopFont();
 		}
 
-		void GUIProgram::changeProgramWindowStyle(int windowStyle)
+		void GUIProgram::changeProgramWindowStyle(const int windowStyle)
 		{
 			if (m_programStarted)
 			{
@@ -202,7 +195,7 @@ namespace KeilerDev
 			}
 		}
 
-		void GUIProgram::writeFontWarning(std::string fontPath, std::string fontName)
+		void GUIProgram::writeFontWarning(const std::string fontPath, const std::string fontName)
 		{
 			if (m_fontWarnings.empty())
 			{
