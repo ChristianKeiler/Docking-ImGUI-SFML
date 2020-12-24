@@ -55,8 +55,6 @@ int main()
 	GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	program->setProgramName("Test");
 
-	program->setProgramIcon("fonts/icon.png");
-
 	program->setProgramWindowStyle(sf::Style::Titlebar | sf::Style::Close);
 
 	// I suggest setting header and body using either of 2 styles
