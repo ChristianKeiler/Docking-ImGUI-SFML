@@ -160,9 +160,7 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_stdlib.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\GUIProgram.cpp" />
     <ClCompile Include="src\ImGUI_SFML_Setup.cpp" />
-    <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui-sfml\imgui-SFML.h" />

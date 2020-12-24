@@ -39,13 +39,7 @@
     <ClCompile Include="imgui-sfml\imgui-SFML.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUIProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ImGUI_SFML_Setup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
