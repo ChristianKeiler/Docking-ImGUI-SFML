@@ -2,8 +2,8 @@
 //
 #pragma once
 #include <iostream>
-#include "../include/GUIProgram.h"
-#include "../include/Utility.h"
+#include "GUIProgram.h"
+#include "Utility.h"
 
 // IMGUI Includes
 #include "imgui.h"
@@ -54,8 +54,6 @@ int main()
 {
 	GUIProgram::GUIProgram* program = GUIProgram::GUIProgram::Get();
 	program->setProgramName("Test");
-
-	program->setProgramIcon("fonts/icon.png");
 
 	program->setProgramWindowStyle(sf::Style::Titlebar | sf::Style::Close);
 

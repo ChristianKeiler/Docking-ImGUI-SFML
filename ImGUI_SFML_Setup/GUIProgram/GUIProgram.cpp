@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/GUIProgram.h"
+#include "GUIProgram.h"
 
 namespace KeilerDev
 {
