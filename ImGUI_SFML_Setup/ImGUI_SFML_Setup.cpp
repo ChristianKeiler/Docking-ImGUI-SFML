@@ -2,8 +2,8 @@
 //
 #pragma once
 #include <iostream>
-#include "../include/GUIProgram.h"
-#include "../include/Utility.h"
+#include "GUIProgram.h"
+#include "Utility.h"
 
 // IMGUI Includes
 #include "imgui.h"
